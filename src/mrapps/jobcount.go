@@ -8,14 +8,16 @@ package main
 // go build -buildmode=plugin crash.go
 //
 
-import "6.5840/mr"
-import "math/rand"
-import "strings"
-import "strconv"
-import "time"
-import "fmt"
-import "os"
-import "io/ioutil"
+import (
+	"fmt"
+	"math/rand"
+	"os"
+	"strconv"
+	"strings"
+	"time"
+
+	"6.5840/mr"
+)
 
 var count int
 
@@ -23,7 +25,8 @@ func Map(filename string, contents string) []mr.KeyValue {
 	me := os.Getpid()
 	f := fmt.Sprintf("mr-worker-jobcount-%d-%d", me, count)
 	count++
-	err := ioutil.WriteFile(f, []byte("x"), 0666)
+	// err := ioutil.WriteFile(f, []byte("x"), 0666)
+	err := os.WriteFile(f, []byte("x"), 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +35,8 @@ func Map(filename string, contents string) []mr.KeyValue {
 }
 
 func Reduce(key string, values []string) string {
-	files, err := ioutil.ReadDir(".")
+	// files, err := ioutil.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
 		panic(err)
 	}
