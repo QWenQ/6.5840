@@ -83,11 +83,51 @@ func (ck *Clerk) Put(key, value string, version rpc.Tversion) rpc.Err;
 
 ### Feature2.0
 
-Implementing a lock using key/value clerk
+Implementing a lock using key/value clerk:
+    1. mutex lock in distributed applications;
 
 #### Data Structures and Functions
 
+```Go
+
+in lock.go:
+
+type Lock struct {
+    lockname string
+}
+
+```
+
 #### Algorithms
+
+```Go
+
+in lock.go:
+
+/*
+    MakeLock registers a new lock in server by calling ck.Put(lockname, "0", 0);
+    value 0 indicates the lock is available and vlaue 1 indicates
+    the lock is unavailable;
+*/
+func MakeLock(ck kvtest.IKVClerk, lockname string) *Lock
+
+/*
+    Acquire keeps trying to call lk.ck.Get(lk.lockname) until the
+    client gets value 0 from the server; 
+    then the client will try to get lock by calling 
+    lk.ck.Put(lk.lockname, "1", version): if Put() fails, the client
+    will continue to do Get() loop until the lock is free
+*/
+func (lk *Lock) Acquire()
+
+/*
+    Release frees lock resource: first, the client gets lock version
+    by calling lk.ck.Get(lk.lockname); then the client releases the
+    lock by calling lk.ck.Put(lk.lockname, "0", version)
+*/
+func (lk *Lock) Release()
+
+```
 
 #### Synchronization
 
