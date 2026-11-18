@@ -141,7 +141,27 @@ Key/value server with dropped messages
 
 #### Data Structures and Functions
 
+```Go
+
+in client.go:
+
+
+```
+
 #### Algorithms
+
+```Go
+
+in client.go:
+
+/*
+*/
+func (ck *Clerk) Get(key str/ng) (string, rpc.Tversion, rpc.Err)
+
+/*
+*/
+func (ck *Clerk) Put(key, value string, version rpc.Tversion) rpc.Err
+```
 
 #### Synchronization
 
